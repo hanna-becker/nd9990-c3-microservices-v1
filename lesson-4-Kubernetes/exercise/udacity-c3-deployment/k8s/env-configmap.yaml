@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+data:
+  AWS_BUCKET: udagram-becker-dev
+  AWS_PROFILE: udagram-hanna-dev
+  AWS_REGION: eu-central-1
+  JWT_SECRET: helloworld
+  POSTGRESS_DB: postgres
+  POSTGRESS_HOST: udagrambeckerdev.cv0rui88rc4c.eu-central-1.rds.amazonaws.com
+  URL: http://localhost:8100
