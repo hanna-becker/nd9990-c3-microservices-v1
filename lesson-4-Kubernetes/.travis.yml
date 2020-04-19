@@ -19,13 +19,13 @@ before_install:
     # configure kubectl
     - mkdir ${HOME}/.kube
     - cp lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/kubeconfig ${HOME}/.kube/config
-    - kubectl config set clusters.k8s.local.certificate-authority-data "$KUBE_CLUSTER_CERTIFICATE"
-    - kubectl config set users.k8s.local.client-certificate-data "$KUBE_CLIENT_CERTIFICATE_DATA"
-    - kubectl config set users.k8s.local.client-key-data "$KUBE_CLIENT_KEY_DATA"
-    - kubectl config set users.k8s.local.username "$KUBE_USERNAME"
-    - kubectl config set users.k8s.local.password "$KUBE_PASSWORD"
-    - kubectl config set users.k8s.k8s.local-basic-auth.username "$KUBE_USERNAME"
-    - kubectl config set users.k8s.k8s.local-basic-auth.password "$KUBE_PASSWORD"
+    - kubectl config set clusters.hannabecker.k8s.local.certificate-authority-data "$KUBE_CLUSTER_CERTIFICATE"
+    - kubectl config set users.hannabecker.k8s.local.client-certificate-data "$KUBE_CLIENT_CERTIFICATE_DATA"
+    - kubectl config set users.hannabecker.k8s.local.client-key-data "$KUBE_CLIENT_KEY_DATA"
+    - kubectl config set users.hannabecker.k8s.local.username "$KUBE_USERNAME"
+    - kubectl config set users.hannabecker.k8s.local.password "$KUBE_PASSWORD"
+    - kubectl config set users.hannabecker.k8s.local-basic-auth.username "$KUBE_USERNAME"
+    - kubectl config set users.hannabecker.k8s.local-basic-auth.password "$KUBE_PASSWORD"
 
     # docker login
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
