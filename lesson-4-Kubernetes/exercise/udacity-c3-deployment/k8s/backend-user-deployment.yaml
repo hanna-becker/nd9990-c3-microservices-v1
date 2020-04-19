@@ -17,7 +17,7 @@ spec:
       volumes:
         - name: aws-secret
           secret:
-            secretName: aws-secret
+            secretName: env-secret
         - name: configmap-volume
           configMap:
             name: env-config
