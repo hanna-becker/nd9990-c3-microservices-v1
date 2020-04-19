@@ -1,6 +1,6 @@
 # Monolith to Microservices at Scale Project
 
-Find the project code in the 'exercise' directory in the 'lesson-4-Kubernetes' path.
+Find the project code under 'lesson-4-Kubernetes/exercise'.
 
 Find screenshots in the screenshots directory.
 
