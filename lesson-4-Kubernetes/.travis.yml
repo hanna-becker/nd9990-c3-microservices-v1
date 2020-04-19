@@ -17,3 +17,10 @@ before_install:
 
 install:
     - docker-compose -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
+
+    # push images to docker hub
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push "$DOCKER_USERNAME"/udacity-restapi-feed
+    - docker push "$DOCKER_USERNAME"/udacity-restapi-user
+    - docker push "$DOCKER_USERNAME"/udacity-frontend
+    - docker push "$DOCKER_USERNAME"/reverseproxy
