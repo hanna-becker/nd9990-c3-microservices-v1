@@ -6,6 +6,7 @@ env:
     - DOCKER_COMPOSE_VERSION=1.25.5
 
 before_install:
+    # install docker-compose and kubectl
     - docker -v && docker-compose -v
     - sudo rm /usr/local/bin/docker-compose
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -14,7 +15,39 @@ before_install:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - sudo mv ./kubectl /usr/local/bin/kubectl
+    
+    # configure kubectl
+    - mkdir ${HOME}/.kube
+    - cp lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/kubeconfig ${HOME}/.kube/config
+    - kubectl config set clusters.hannabecker.k8s.local.certificate-authority-data "$KUBE_CLUSTER_CERTIFICATE"
+    - kubectl config set users.hannabecker.k8s.local.client-certificate-data "$KUBE_CLIENT_CERTIFICATE_DATA"
+    - kubectl config set users.hannabecker.k8s.local.client-key-data "$KUBE_CLIENT_KEY_DATA"
+    - kubectl config set users.hannabecker.k8s.local.username "$KUBE_USERNAME"
+    - kubectl config set users.hannabecker.k8s.local.password "$KUBE_PASSWORD"
+    - kubectl config set users.hannabecker.k8s.local-basic-auth.username "$KUBE_USERNAME"
+    - kubectl config set users.hannabecker.k8s.local-basic-auth.password "$KUBE_PASSWORD"
+
+    # docker login
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
-    - echo `hello udacity`
-    #- docker-compose -f course-03/exercises/udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel 
+    - docker-compose -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
+
+    # push images to docker hub
+    - docker push "$DOCKER_USERNAME"/udacity-restapi-feed
+    - docker push "$DOCKER_USERNAME"/udacity-restapi-user
+    - docker push "$DOCKER_USERNAME"/udacity-frontend
+    - docker push "$DOCKER_USERNAME"/reverseproxy
+
+    # deploy app's microservices
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/env-configmap.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/backend-feed-deployment.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/backend-user-deployment.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/frontend-deployment.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/reverseproxy-deployment.yaml
+
+    # deploy cluster IP services
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/backend-feed-srv.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/backend-user-srv.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/frontend-srv.yaml
+    - kubectl apply -f lesson-4-Kubernetes/exercise/udacity-c3-deployment/k8s/reverseproxy-srv.yaml
